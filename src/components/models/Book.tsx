@@ -4,8 +4,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { GLTF } from "three-stdlib";
 import { Html, useBounds, useCursor, useGLTF } from "@react-three/drei";
 import * as THREE from "three";
-import { ThreeEvent, useFrame, useThree } from "@react-three/fiber";
-import * as TWEEN from "@tweenjs/tween.js";
+import { ThreeEvent, useThree } from "@react-three/fiber";
+import { gsap } from "gsap";
 import { useTooltipContext } from "@/contexts/TooltipContext";
 import { useToogleContext } from "@/contexts/ToogleContext";
 import BookPages from "../BookPages";
@@ -41,9 +41,6 @@ const Book = ({ globalRef }: BookProps) => {
 
   const [hovered, setHovered] = useState(false);
   const [hidden, setHidden] = useState(true);
-  const [originalCameraPosition, setOriginalCameraPosition] = useState(
-    camera.position
-  );
 
   const { isToogle, setIsToogle } = useToogleContext();
   const { setCurrentStage } = useTooltipContext();
@@ -51,10 +48,6 @@ const Book = ({ globalRef }: BookProps) => {
   const { nodes, materials } = useGLTF(filePath) as GLTFResult;
 
   useCursor(hovered);
-
-  useFrame(() => {
-    TWEEN.update();
-  });
 
   const handleBookOnPointerOver = (e: ThreeEvent<MouseEvent>) => {
     e.stopPropagation();
@@ -64,7 +57,8 @@ const Book = ({ globalRef }: BookProps) => {
     }
   };
 
-  const handleBookOnPointerOut = () => {
+  const handleBookOnPointerOut = (e: ThreeEvent<MouseEvent>) => {
+    e.stopPropagation();
     if (!isToogle) {
       setHovered(false);
       setCurrentStage(0);
@@ -97,26 +91,37 @@ const Book = ({ globalRef }: BookProps) => {
       await sleep(1300);
 
       cameraRotationIn();
+
+      await sleep(1200);
+
+      setHidden(false);
     }
   };
 
   const cameraRotationIn = () => {
-    const targetCamera = new THREE.Vector3(Math.PI / 3, Math.PI / 4, 0.2);
-
-    new TWEEN.Tween(originalCameraPosition)
-      .to(targetCamera, 1100)
-      .easing(TWEEN.Easing.Sinusoidal.In)
-      .onComplete(() => {
-        setHidden(false);
-      })
-      .start();
+    gsap.to(camera.position, {
+      x: Math.PI / 3,
+      y: Math.PI / 4,
+      z: 0.2,
+      ease: "power1.in",
+      duration: 1.2,
+    });
   };
 
   const cameraRotationOut = () => {
-    new TWEEN.Tween(camera.position)
-      .to(originalCameraPosition, 1300)
-      .easing(TWEEN.Easing.Quadratic.In)
-      .start();
+    const originalCameraPosition = new THREE.Vector3(
+      0,
+      1.8234450240826342e-15,
+      29.779117135686597
+    );
+
+    gsap.to(camera.position, {
+      x: originalCameraPosition.x,
+      y: originalCameraPosition.y,
+      z: originalCameraPosition.z,
+      ease: "power1.in",
+      duration: 1.6,
+    });
   };
 
   const handleBookOnClickBack = async () => {
@@ -127,7 +132,7 @@ const Book = ({ globalRef }: BookProps) => {
 
     cameraRotationOut();
 
-    await sleep(1300);
+    await sleep(1600);
 
     zoomOut();
   };

@@ -32,12 +32,7 @@ export default function RoomScene() {
 
   return (
     <section className="absolute top-0 w-full h-screen bg-slate-50 dark:bg-gray-950">
-      <Canvas
-        gl={{ antialias: true }}
-        dpr={[1, 1.5]}
-        frameloop="demand"
-        shadows="variance"
-      >
+      <Canvas gl={{ antialias: true }} dpr={[1, 1.5]} shadows="variance">
         <OrthographicCamera
           makeDefault
           zoom={90}
