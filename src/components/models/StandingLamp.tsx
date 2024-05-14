@@ -8,6 +8,7 @@ import React, { useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import { useCursor, useGLTF } from "@react-three/drei";
 import { GLTF } from "three-stdlib";
+import { useToogleContext } from "@/contexts/ToogleContext";
 
 const filePath = "/3d/standingLamp.glb";
 

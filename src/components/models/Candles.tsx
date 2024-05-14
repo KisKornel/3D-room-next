@@ -49,31 +49,13 @@ const Candles = (props: JSX.IntrinsicElements["group"]) => {
     setIsCandleLightOn(() => !isCandleLightOn);
   };
 
-  const pointLight1 = useMemo(() => {
-    const pointLight = new THREE.PointLight(CANDLES_COLOR, 0.07, 1, 1.3);
-    pointLight.castShadow = true;
-    pointLight.visible = isToogle ? false : isCandleLightOn;
+  const pointLight = useMemo(() => {
+    const pl = new THREE.PointLight(CANDLES_COLOR, 0.07, 1, 1.3);
+    pl.visible = isToogle ? false : isCandleLightOn;
+    isToogle ? pl.dispose() : null;
 
-    return pointLight;
+    return pl;
   }, [isCandleLightOn, isToogle]);
-
-  const pointLight2 = useMemo(() => {
-    const pointLight = pointLight1.clone();
-
-    return pointLight;
-  }, [pointLight1]);
-
-  const pointLight3 = useMemo(() => {
-    const pointLight = pointLight1.clone();
-
-    return pointLight;
-  }, [pointLight1]);
-
-  const pointLight4 = useMemo(() => {
-    const pointLight = pointLight1.clone();
-
-    return pointLight;
-  }, [pointLight1]);
 
   return (
     <group
@@ -97,7 +79,7 @@ const Candles = (props: JSX.IntrinsicElements["group"]) => {
           geometry={nodes.Circle007_1.geometry}
           material={materials.CandleLight}
         />
-        <primitive object={pointLight1} position={[0, 0.13, 0]} />
+        <primitive object={pointLight} position={[0, 0.13, 0]} />
       </group>
       <group position={[-1.626, 0.534, 1.311]}>
         <mesh
@@ -112,7 +94,7 @@ const Candles = (props: JSX.IntrinsicElements["group"]) => {
           geometry={nodes.Circle009_1.geometry}
           material={materials.CandleLight}
         />
-        <primitive object={pointLight2} position={[0, 0.1, 0]} />
+        <primitive object={pointLight.clone()} position={[0, 0.1, 0]} />
       </group>
       <group position={[-1.626, 0.534, 1.013]}>
         <mesh
@@ -127,7 +109,7 @@ const Candles = (props: JSX.IntrinsicElements["group"]) => {
           geometry={nodes.Circle010_1.geometry}
           material={materials.CandleLight}
         />
-        <primitive object={pointLight3} position={[0, 0.22, 0]} />
+        <primitive object={pointLight.clone()} position={[0, 0.22, 0]} />
       </group>
       <group position={[-1.341, -0.144, -1.587]}>
         <mesh
@@ -142,7 +124,7 @@ const Candles = (props: JSX.IntrinsicElements["group"]) => {
           geometry={nodes.Circle011_1.geometry}
           material={materials.CandleLight}
         />
-        <primitive object={pointLight4} position={[0, 0.13, 0]} />
+        <primitive object={pointLight.clone()} position={[0, 0.13, 0]} />
       </group>
     </group>
   );
